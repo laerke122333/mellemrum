@@ -6,8 +6,6 @@ export default defineConfig(({ command, isPreview }) => {
   return {
     plugins: [react()],
 
-    // Dev kører på /
-    // Build + preview bruger GitHub Pages-stien
-    base: command === "serve" && isPreview !== true ? "/" : pkg.base,
+    base: command === "serve" && !isPreview ? "/" : pkg.base,
   };
 });
