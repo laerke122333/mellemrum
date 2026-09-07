@@ -39,22 +39,20 @@ export default function HomePage() {
         .from("events")
         .select(
           `
-          id,
-          title,
-          summary,
-          date,
-          venueName,
-          category,
-          image
-        `,
+        id,
+        title,
+        summary,
+        date,
+        venueName,
+        category,
+        image
+      `,
         )
         .order("date", { ascending: true });
 
       if (error) {
         console.error("Fejl ved hentning af events:", error);
-
-        setErrorMessage("Events kunne ikke hentes. Prøv igen senere.");
-
+        setErrorMessage("Events kunne ikke hentes.");
         setLoading(false);
         return;
       }
