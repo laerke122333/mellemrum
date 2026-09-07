@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { supabase } from "../lib/supabase";
+import heroImage from "../assets/hero.webp";
 
 import "./HomePage.css";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
-const headers = {
-  apikey: import.meta.env.VITE_SUPABASE_APIKEY,
-  "Content-Type": "application/json",
-};
 
 // Sørger for at både lokale billeder og Supabase-billeder virker
 function getImageUrl(image) {
@@ -41,25 +38,32 @@ export default function HomePage() {
       setLoading(true);
       setErrorMessage("");
 
-      try {
-        const response = await fetch(`${SUPABASE_URL}/events?order=date.asc`, {
-          headers,
-        });
+      const { data, error } = await supabase
+        .from("events")
+        .select(
+          `
+        id,
+        title,
+        summary,
+        date,
+        venueName,
+        category,
+        image
+      `,
+        )
+        .order("date", { ascending: true });
 
-        if (!response.ok) {
-          throw new Error("Kunne ikke hente events");
-        }
-
-        const data = await response.json();
-
-        setEvents(data);
-      } catch (error) {
+      if (error) {
         console.error("Fejl ved hentning af events:", error);
 
         setErrorMessage("Events kunne ikke hentes. Prøv igen senere.");
-      } finally {
+
         setLoading(false);
+        return;
       }
+
+      setEvents(data || []);
+      setLoading(false);
     }
 
     getEvents();
@@ -106,7 +110,7 @@ export default function HomePage() {
       <header className="hero">
         <img
           className="hero-image"
-          src={`${import.meta.env.BASE_URL}hero.webp`}
+          src={heroImage}
           alt=""
           fetchPriority="high"
         />
