@@ -1,9 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
-const restUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_APIKEY;
 
-// Fjerner /rest/v1, fordi Supabase Auth skal bruge projektets grund-URL
-const supabaseProjectUrl = restUrl.replace(/\/rest\/v1\/?$/, "");
+if (!supabaseUrl) {
+  throw new Error("VITE_SUPABASE_URL mangler i .env");
+}
 
-export const supabase = createClient(supabaseProjectUrl, supabaseKey);
+if (!supabaseKey) {
+  throw new Error("VITE_SUPABASE_APIKEY mangler i .env");
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey);

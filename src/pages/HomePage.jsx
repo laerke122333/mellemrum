@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+
 import { supabase } from "../lib/supabase";
 import heroImage from "../assets/hero.webp";
 
 import "./HomePage.css";
 
-
-
-// Sørger for at både lokale billeder og Supabase-billeder virker
 function getImageUrl(image) {
   if (!image) {
     return "";
   }
 
-  // Nye billeder fra Supabase Storage
+  // Billeder fra Supabase Storage
   if (image.startsWith("http://") || image.startsWith("https://")) {
     return image;
   }
 
-  // Gamle billeder fra public-mappen
+  // Gamle eventbilleder fra public/events
   const cleanImage = image.replace(/^\/+/, "");
 
   return `${import.meta.env.BASE_URL}${cleanImage}`;
@@ -32,7 +30,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // HENT EVENTS FRA SUPABASE
   useEffect(() => {
     async function getEvents() {
       setLoading(true);
@@ -42,14 +39,14 @@ export default function HomePage() {
         .from("events")
         .select(
           `
-        id,
-        title,
-        summary,
-        date,
-        venueName,
-        category,
-        image
-      `,
+          id,
+          title,
+          summary,
+          date,
+          venueName,
+          category,
+          image
+        `,
         )
         .order("date", { ascending: true });
 
@@ -69,14 +66,11 @@ export default function HomePage() {
     getEvents();
   }, []);
 
-  // FIND ALLE KATEGORIER
-  // filter(Boolean) fjerner tomme kategorier
   const categories = [
     "Alle",
     ...new Set(events.map((event) => event.category).filter(Boolean)),
   ];
 
-  // SØGNING + KATEGORI-FILTER
   const filteredEvents = events.filter((event) => {
     const searchText = `
       ${event.title || ""}
@@ -91,7 +85,6 @@ export default function HomePage() {
     return matchesSearch && matchesCategory;
   });
 
-  // FORMATÉR DATO
   function formatEventDate(eventDate) {
     const date = new Date(eventDate);
 
@@ -197,14 +190,11 @@ export default function HomePage() {
           <section className="no-results">
             <h3>Ingen events fundet</h3>
 
-            <p>
-              Vi kunne ikke finde nogen events, der matcher din søgning. Prøv et
-              andet søgeord eller en anden kategori.
-            </p>
+            <p>Vi kunne ikke finde nogen events, der matcher din søgning.</p>
           </section>
         )}
 
-        {/* EVENT-KORT */}
+        {/* EVENTKORT */}
         {!loading && !errorMessage && filteredEvents.length > 0 && (
           <section className="event-grid">
             {filteredEvents.map((event) => (
