@@ -3,12 +3,4 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_APIKEY;
 
-if (!supabaseUrl) {
-  throw new Error("VITE_SUPABASE_URL mangler i .env");
-}
-
-if (!supabaseKey) {
-  throw new Error("VITE_SUPABASE_APIKEY mangler i .env");
-}
-
 export const supabase = createClient(supabaseUrl, supabaseKey);
