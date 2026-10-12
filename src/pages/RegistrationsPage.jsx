@@ -186,7 +186,7 @@ export default function RegistrationsPage() {
   return (
     <>
       <header className="admin-header">
-        <p className="eyebrow">Event overblik</p>
+        
 
         <h1>Tilmeldinger</h1>
 

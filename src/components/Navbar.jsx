@@ -16,6 +16,8 @@ export default function Navbar() {
           Events
         </a>
 
+        <Link to="/tilmeldinger">Tilmeldinger</Link>
+
         <Link to="/om">Om Mellemrum</Link>
 
         {user ? (
